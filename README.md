@@ -40,6 +40,7 @@ A security-focused tool to create and manage restricted user accounts with contr
 git clone https://github.com/yourusername/User-System-Restriction.git
 cd User-System-Restriction
 chmod +x createuser.sh updateuser.sh
+```
 ## Usage
 
 ### createuser.sh
