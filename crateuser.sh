@@ -33,9 +33,21 @@ for cmd in "${COMMANDS[@]}"; do
 done      
 
 
-# Set PATH in .profile
-sudo bash -c "echo 'export PATH=$ALLOWED_DIR' >> /home/$USERNAME/.profile"
+sudo bash <<EOF
+# Set and lock PATH
+echo "export PATH=$ALLOWED_DIR" > "/home/$USERNAME/.profile"
+echo "readonly PATH" >> "/home/$USERNAME/.profile"
 
-# Set ownership and permissions
-sudo chown -R "$USERNAME":"$USERNAME" /home/"$USERNAME"
-sudo chmod 700 "$ALLOWED_DIR"
+# Disable dangerous built-ins
+echo "disable -f set" > "/home/$USERNAME/.bashrc"
+echo "disable -f export" >> "/home/$USERNAME/.bashrc"
+echo "disable -f unset" >> "/home/$USERNAME/.bashrc"
+
+# Set ownership
+chown -R "$USERNAME:$USERNAME" "/home/$USERNAME"
+chmod 700 "$ALLOWED_DIR"
+
+# Make config files immutable
+chattr +a "/home/$USERNAME"/{.bashrc,.profile}
+
+EOF
