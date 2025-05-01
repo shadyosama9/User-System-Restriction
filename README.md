@@ -15,8 +15,6 @@ A security-focused tool to create and manage restricted user accounts with contr
 - [Security Model](#security-model)
 - [Examples](#examples)
 - [Best Practices](#best-practices)
-- [Limitations](#limitations)
-- [License](#license)
 
 ## Features
 
