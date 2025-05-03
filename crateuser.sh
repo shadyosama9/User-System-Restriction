@@ -22,6 +22,7 @@ ALLOWED_DIR=/home/"$USERNAME"/allowed_commands
 sudo mkdir -p "$ALLOWED_DIR"
 
 #Create symbolic links to the allowed commands
+
 for cmd in "${COMMANDS[@]}"; do
        if [ -x "/usr/bin/$cmd" ]; then
          sudo ln -s "/usr/bin/$cmd" "/home/$USERNAME/allowed_commands/$cmd"
@@ -32,37 +33,14 @@ for cmd in "${COMMANDS[@]}"; do
 done      
 
 
-# Configure strict environment
 sudo bash <<EOF
-# Clean existing configs
-rm -f "/home/$USERNAME"/{.bashrc,.profile}
-
-# Basic restrictions
+# Set and lock PATH
 echo "export PATH=$ALLOWED_DIR" > "/home/$USERNAME/.profile"
 echo "readonly PATH" >> "/home/$USERNAME/.profile"
 
-# Disable all dangerous features
-echo "set -f" > "/home/$USERNAME/.bashrc"                  
-echo "shopt -u extglob" >> "/home/$USERNAME/.bashrc"       
-echo "shopt -u sourcepath" >> "/home/$USERNAME/.bashrc"    
-echo "disable -f command" >> "/home/$USERNAME/.bashrc"     
-echo "disable -f set" >> "/home/$USERNAME/.bashrc"         
-echo "disable -f unset" >> "/home/$USERNAME/.bashrc"       
-echo "alias '\$()=:'" >> "/home/$USERNAME/.bashrc"         
-echo "alias '\\\`=:'" >> "/home/$USERNAME/.bashrc"         
+# Disable dangerous built-ins
+echo "disable -f set" > "/home/$USERNAME/.bashrc"
+echo "disable -f export" >> "/home/$USERNAME/.bashrc"
+echo "disable -f unset" >> "/home/$USERNAME/.bashrc"
 
-# Block shell escapes
-echo "function /bin/bash { return 1; }" >> "/home/$USERNAME/.bashrc"
-echo "function /bin/sh { return 1; }" >> "/home/$USERNAME/.bashrc"
-echo "function /usr/bin/bash { return 1; }" >> "/home/$USERNAME/.bashrc"
-echo "function /usr/bin/sh { return 1; }" >> "/home/$USERNAME/.bashrc"
-
-# Set permissions
-chown -R "$USERNAME:$USERNAME" "/home/$USERNAME"
-chmod 755 "/home/$USERNAME"
-chmod 700 "$ALLOWED_DIR"
-chmod 644 "/home/$USERNAME"/{.bashrc,.profile}
-
-# Final lockdown
-chattr +a "/home/$USERNAME/.bashrc" "/home/$USERNAME/.profile"
 EOF
