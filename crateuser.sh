@@ -26,9 +26,19 @@ sudo mkdir -p "$ALLOWED_DIR"
 for cmd in "${COMMANDS[@]}"; do
        if [ -x "/usr/bin/$cmd" ]; then
          sudo ln -s "/usr/bin/$cmd" "/home/$USERNAME/allowed_commands/$cmd"
-	 echo "Added command '$cmd' to allowed commands for user '$USERNAME'."
+	       echo "Added command '$cmd' to allowed commands for user '$USERNAME'."
        else
-         echo "Warning: /usr/bin/$cmd does not exist or is not executable"
+         read -p "Warning: /usr/bin/$cmd does not exist or is not executable do you wish to continue ? (y/n)" choice
+         case "$choice" in
+            [yY])
+              sudo ln -s "/usr/bin/$cmd" "/home/$USERNAME/allowed_commands/$cmd"
+              echo "Added command '$cmd' to allowed commands for user '$USERNAME'."
+              ;;
+            *)
+              echo "Skipping '$cmd'."
+              ;;
+         esac        
+
        fi
 done      
 
