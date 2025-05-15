@@ -2,6 +2,22 @@
 
 set -e
 
+if [[ "$1" == "--tunnel-only" && -n "$2" ]]; then
+  USERNAME=$2
+  echo "[+] Creating tunneling-only user: $USERNAME"
+  
+  # Create user without password or shell
+  sudo adduser --disabled-password --gecos "" "$USERNAME"
+  sudo usermod -s /usr/sbin/nologin "$USERNAME"
+  
+  # Create .ssh folder for key-based auth
+  sudo mkdir -p /home/"$USERNAME"/.ssh
+  sudo touch /home/"$USERNAME"/.ssh/authorized_keys
+  echo "[+] User '$USERNAME' created for SSH tunneling only."
+  echo "Add their public key to: /home/$USERNAME/.ssh/authorized_keys"
+  exit 0
+fi
+
 if [ "$#" -lt 2 ]; then
 	echo "Usage: $0 <username> <command1> [command2] [command3] ..."
 	exit 1
