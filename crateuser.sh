@@ -13,8 +13,14 @@ if [[ "$1" == "--tunnel-only" && -n "$2" ]]; then
   # Create .ssh folder for key-based auth
   sudo mkdir -p /home/"$USERNAME"/.ssh
   sudo touch /home/"$USERNAME"/.ssh/authorized_keys
+  
+  sudo chown -R "$USERNAME:$USERNAME" /home/"$USERNAME"/.ssh
+  sudo chmod 700 /home/"$USERNAME"/.ssh
+  sudo chmod 600 /home/"$USERNAME"/.ssh/authorized_keys
+
   echo "[+] User '$USERNAME' created for SSH tunneling only."
   echo "Add their public key to: /home/$USERNAME/.ssh/authorized_keys"
+  
   exit 0
 fi
 
