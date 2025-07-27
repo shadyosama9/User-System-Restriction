@@ -43,6 +43,14 @@ sudo chsh -s /bin/rbash "$USERNAME"
 ALLOWED_DIR=/home/"$USERNAME"/allowed_commands
 sudo mkdir -p "$ALLOWED_DIR"
 
+# Create .ssh folder for key-based auth
+sudo mkdir -p /home/"$USERNAME"/.ssh
+sudo touch /home/"$USERNAME"/.ssh/authorized_keys
+  
+sudo chown -R "$USERNAME:$USERNAME" /home/"$USERNAME"/.ssh
+sudo chmod 700 /home/"$USERNAME"/.ssh
+sudo chmod 600 /home/"$USERNAME"/.ssh/authorized_keys
+  
 #Create symbolic links to the allowed commands
 
 for cmd in "${COMMANDS[@]}"; do
