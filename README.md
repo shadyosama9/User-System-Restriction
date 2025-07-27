@@ -50,6 +50,13 @@ Creates a new restricted user account.
 sudo ./createuser.sh USERNAME COMMAND1 [COMMAND2...]
 ```
 
+**Tunnel-Only Users:**  
+To create a tunnel-only user (for SSH tunneling or port forwarding with no shell access), use:
+
+```bash
+sudo ./createuser.sh --tunnel-only USERNAME
+```
+
 **Implementation Details:**
 1. Creates user with disabled password
 2. Sets shell to `/bin/rbash`
